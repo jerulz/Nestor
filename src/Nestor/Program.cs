@@ -1,2 +1,3 @@
-﻿// See https://aka.ms/new-console-template for more information
-Console.WriteLine("Hello, World!");
+﻿const string TOKEN = "";
+Bot bot = new Bot(TOKEN);
+await bot.StartAsync();
