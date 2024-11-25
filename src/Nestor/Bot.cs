@@ -1,25 +1,28 @@
 using Discord;
 using Discord.WebSocket;
-using System;
-using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using Nestor.Commands;
+using Nestor.Messages;
 
 public class Bot
 {
     private readonly DiscordSocketClient _client;
     private readonly string _token;
+    private readonly ILogger<Bot> _logger;
+    private readonly IMessagesProcessor _messagesProcessor;
+ 
 
-    public Bot(string token)
+    public Bot(string token, DiscordSocketClient client, ILogger<Bot> logger, IMessagesProcessor messagesProcessor)
     {
-        var config = new DiscordSocketConfig
-        {
-            GatewayIntents = GatewayIntents.AllUnprivileged | GatewayIntents.MessageContent
-        };
-        _client = new DiscordSocketClient(config);
+        _client = client;
         _token = token;
+        _logger = logger;
+        _messagesProcessor = messagesProcessor;
     }
 
     public async Task StartAsync()
     {
+        
         _client.Log += LogAsync;
         _client.Ready += ReadyAsync;
         _client.MessageReceived += MessageReceivedAsync;
@@ -47,32 +50,10 @@ public class Bot
     {
         if (message is not SocketUserMessage userMessage)
         {
-            Console.WriteLine("Ignoring non-user message");
+            _logger.LogInformation("Ignoring non-user message");
             return;
         }
 
-        Console.WriteLine($"Received message from {userMessage.Author.Username}: {userMessage.Content}");
-
-        if (userMessage.Author.IsBot)
-        {
-            Console.WriteLine("Ignoring message from bot");
-            return;
-        }
-
-        if (string.IsNullOrEmpty(userMessage.Content))
-        {
-            Console.WriteLine("Ignoring empty message");
-            return;
-        }
-
-        if (userMessage.Content == "!ping")
-        {
-            Console.WriteLine("Received !ping command");
-            await userMessage.Channel.SendMessageAsync("Pong!");
-        }
-        else
-        {
-            Console.WriteLine($"Message content: {userMessage.Content}");
-        }
+        await _messagesProcessor.ProcessMessageAsync(userMessage);
     }
 }
