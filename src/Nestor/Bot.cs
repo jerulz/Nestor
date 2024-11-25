@@ -7,12 +7,12 @@ using Nestor.Messages;
 public class Bot
 {
     private readonly DiscordSocketClient _client;
-    private readonly string _token;
+    private readonly string? _token;
     private readonly ILogger<Bot> _logger;
     private readonly IMessagesProcessor _messagesProcessor;
  
 
-    public Bot(string token, DiscordSocketClient client, ILogger<Bot> logger, IMessagesProcessor messagesProcessor)
+    public Bot(string? token, DiscordSocketClient client, ILogger<Bot> logger, IMessagesProcessor messagesProcessor)
     {
         _client = client;
         _token = token;
