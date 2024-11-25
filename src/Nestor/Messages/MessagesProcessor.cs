@@ -1,4 +1,3 @@
-using System.Globalization;
 using Discord.WebSocket;
 using Microsoft.Extensions.Logging;
 using Nestor.Commands;
@@ -21,17 +20,9 @@ public class MessagesProcessor(ILogger<MessagesProcessor> logger, ICommandsProce
             logger.LogInformation("Ignoring empty message");
         }
 
-        if (message.Content == "!ping")
+        if (message.Content.StartsWith("!"))
         {
-            logger.LogInformation("Received !ping command");
-            await message.Channel.SendMessageAsync("Pong!");
-        }
-
-        if (message.Content == "!time")
-        {
-            logger.LogInformation("Received !time command");
-            await message.Channel.SendMessageAsync(
-                DateTime.Now.ToString(CultureInfo.InvariantCulture).Split(' ')[1]);
+            await commandsProcessor.ProcessCommandAsync(message);
         }
     }
 }
