@@ -17,5 +17,14 @@ public class CommandsProcessor(ILogger<CommandsProcessor> logger) : ICommandsPro
         {
             await message.Channel.SendMessageAsync(DateTime.Now.ToString(CultureInfo.InvariantCulture).Split(' ')[1]);
         }
+        if(message.Content == "!stats")
+        {
+            string userName = message.Author.Username;
+            await message.Channel.SendMessageAsync("[STATS] "+ userName +" =>  Not Implemented yet");
+        }
+        if(message.Content == "!help")
+        {
+            await message.Channel.SendMessageAsync("Commands: !ping, !time, !stats, !help");
+        }
     }
 }

@@ -10,11 +10,6 @@ public class MessagesProcessor(ILogger<MessagesProcessor> logger, ICommandsProce
     {
         logger.LogInformation("Received message from {AuthorUsername}: {MessageContent}", message.Author.Username, message.Content);
 
-        if (message.Author.IsBot)
-        {
-            logger.LogInformation("Ignoring message from bot");
-        }
-
         if (string.IsNullOrEmpty(message.Content))
         {
             logger.LogInformation("Ignoring empty message");
